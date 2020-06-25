@@ -14,11 +14,19 @@ app.get("/", function (req, res) {
   https.get(url, function (response) {
     console.log(response.statusCode);
 
-    // get the data from response
+    // callback function when response data reached
     response.on("data", function (data) {
       // convert hexadecimal data to JSON format
       const weatherData = JSON.parse(data);
-      console.log(weatherData); 
+      console.log(weatherData);
+
+      // select parts of data that I need
+      const temp = weatherData.main.temp;
+      const weatherDescription = weatherData.weather[0].description;
+
+      // unlike res.send, res.write may be called multiple times to provide successive parts of the body
+      res.write(`<h1>The temperature in Seoul is ${temp} degrees Celcius.</h1>`);
+      res.write(`<h1>The weather is currently ${weatherDescription}.</h1>`);
     });
   });
 });
