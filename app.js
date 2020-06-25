@@ -23,10 +23,15 @@ app.get("/", function (req, res) {
       // select parts of data that I need
       const temp = weatherData.main.temp;
       const weatherDescription = weatherData.weather[0].description;
+      const iconcode = weatherData.weather[0].icon;
+      const iconurl =
+        "http://openweathermap.org/img/wn/" + iconcode + "@2x.png";
 
       // unlike res.send, res.write may be called multiple times to provide successive parts of the body
-      res.write(`<h1>The temperature in Seoul is ${temp} degrees Celcius.</h1>`);
-      res.write(`<h1>The weather is currently ${weatherDescription}.</h1>`);
+      res.write(`<h1>Temperature in Seoul: ${temp} degrees Celcius</h1>`);
+      res.write(`<h1>Current weather: ${weatherDescription}</h1>`);
+      res.write(`<img src="${iconurl}">`);
+      res.send();
     });
   });
 });
