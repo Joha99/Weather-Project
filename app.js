@@ -1,14 +1,28 @@
 const express = require("express");
 //native Node HTTPS module
 const https = require("https");
+const bodyparser = require("body-parser");
 
 // initalize new express app
 const app = express();
 
-// landing page
+// bodyparser used to handle HTTP POST request
+app.use(bodyparser.urlencoded({ extended: true }));
+
+// GET request to landing page
 app.get("/", function (req, res) {
-  var url =
-    "https://api.openweathermap.org/data/2.5/weather?q=seoul&appid=9e2aa3cdf0b653363eaf05000206ee15&units=metric";
+  res.sendFile(__dirname + "/index.html");
+});
+
+// POST request to landing page
+app.post("/", function (req, res) {
+  const body = req.body;
+  const city = body.city;
+
+  const query = city; 
+  const appid = "9e2aa3cdf0b653363eaf05000206ee15";
+  const unit = "metric";
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${appid}&units=${unit}`;
 
   // GET request to Openweathermap
   https.get(url, function (response) {
@@ -28,7 +42,7 @@ app.get("/", function (req, res) {
         "http://openweathermap.org/img/wn/" + iconcode + "@2x.png";
 
       // unlike res.send, res.write may be called multiple times to provide successive parts of the body
-      res.write(`<h1>Temperature in Seoul: ${temp} degrees Celcius</h1>`);
+      res.write(`<h1>Temperature in ${query}: ${temp} degrees Celcius</h1>`);
       res.write(`<h1>Current weather: ${weatherDescription}</h1>`);
       res.write(`<img src="${iconurl}">`);
       res.send();
