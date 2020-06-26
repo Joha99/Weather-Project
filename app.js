@@ -1,5 +1,4 @@
 const express = require("express");
-//native Node HTTPS module
 const https = require("https");
 const bodyparser = require("body-parser");
 
